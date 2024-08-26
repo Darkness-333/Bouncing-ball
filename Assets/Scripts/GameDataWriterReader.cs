@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameDataWriterReader {
     private static GameData gameData;
     private static string dataPath = Path.Combine(Application.persistentDataPath, "gamedata.json");
 
-    private static void UpdateData() {
+    private static void UpdateGameData() {
         if (File.Exists(dataPath)) {
             string json = File.ReadAllText(dataPath);
             gameData = JsonUtility.FromJson<GameData>(json);
@@ -17,13 +18,17 @@ public class GameDataWriterReader {
         }
     }
 
+    public static void ResetGameData() {
+        string json = JsonUtility.ToJson(new GameData());
+        File.WriteAllText(dataPath, json);
+    }
     public static GameData GetGameData() {
-        UpdateData();
+        UpdateGameData();
         return gameData;
     }
 
     public static void WriteLevelData(LevelData newLevelData) {
-        UpdateData();
+        UpdateGameData();
         bool levelExists = false;
         foreach (LevelData level in gameData.levels) {
             if (level.levelNumber == newLevelData.levelNumber) {
@@ -40,13 +45,35 @@ public class GameDataWriterReader {
     }
 
     public static LevelData ReadLevelData(int levelNumber) {
-        UpdateData();
+        UpdateGameData();
         foreach (LevelData level in gameData.levels) {
             if (level.levelNumber == levelNumber) {
                 return level;
             }
         }
         return null;
+    }
+
+    public static void UpdateLevelData() {
+        string levelName = SceneManager.GetActiveScene().name;
+        if(!int.TryParse(levelName.Substring(6, levelName.Length - 6), out int res)) {
+            return;
+        }
+        int levelNum = int.Parse(levelName.Substring(6, levelName.Length - 6));
+
+        LevelData levelData = new LevelData();
+        levelData.levelNumber = levelNum;
+
+        LevelData currentLevelData = ReadLevelData(levelNum);
+
+        if (currentLevelData == null) {
+            levelData.maxCoinsCollected = CoinCollector.collectedCoins;
+        }
+        else {
+            levelData.maxCoinsCollected = Mathf.Max(CoinCollector.collectedCoins, currentLevelData.maxCoinsCollected);
+        }
+        WriteLevelData(levelData);
+
     }
 }
 

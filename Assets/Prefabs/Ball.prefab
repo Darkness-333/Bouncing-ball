@@ -154,7 +154,6 @@ MonoBehaviour:
   bounceEffect: {fileID: 2211374786338718540, guid: bd61fbc3d45756944bfa2745117cf8f6, type: 3}
   speed: 10
   isMoving: 0
-  vectorLength: 0
 --- !u!114 &8418001839165347939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,7 +193,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slider: {fileID: 0}
   currentSpeed: {fileID: 0}
-  maxSpeed: 20
+  maxSpeed: 50
   changeSpeed: 10
 --- !u!114 &3791026997213305139
 MonoBehaviour:
@@ -208,7 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33532882656c9c0498a40b19161dca4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bounceNumber: 20
+  coinCollector: {fileID: 0}
   bounceNumberText: {fileID: 0}
 --- !u!1 &5962977519917676658
 GameObject:
